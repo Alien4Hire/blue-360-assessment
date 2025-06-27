@@ -63,7 +63,7 @@ function mutateArray(a) {
         first_name: item.first_name,
         last_name: item.last_name,
         room_no: item.guest_booking.room_no,
-        some_array: item.guest_booking.some_array
+        some_total: item.guest_booking.some_array.reduce((sum, n) => sum + n, 0)
     }));
 }
 
