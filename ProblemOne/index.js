@@ -80,7 +80,16 @@ function mutateArray(a) {
         last_name: item.last_name,
         room_no: item.guest_booking.room_no,
         some_total: item.guest_booking.some_array.reduce((sum, n) => sum + n, 0)
-    }));
+    }))
+    // Sort alphabetically by last_name, then first_name
+    // This sorting ensures that the final array is ordered by last name first, and then by first name.
+    .sort((a, b) => {
+        if (a.last_name.toLowerCase() < b.last_name.toLowerCase()) return -1;
+        if (a.last_name.toLowerCase() > b.last_name.toLowerCase()) return 1;
+        if (a.first_name.toLowerCase() < b.first_name.toLowerCase()) return -1;
+        if (a.first_name.toLowerCase() > b.first_name.toLowerCase()) return 1;
+        return 0;
+    });
 }
 
 $(document).ready(function() {
