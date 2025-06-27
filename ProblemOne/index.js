@@ -55,10 +55,26 @@ var arr = [
   },
 ];
 
+
+// This is a constant object to define guest types
+// In a complete project, this could be moved to a separate file or module
+// for better maintainability and reusability.
+// It helps to avoid hardcoding strings throughout the code.
+const guestTypes = {
+  CREW: 'crew',
+  GUEST: 'guest'
+}
+
+
+// This function mutates the array to filter and map guest details
+// It returns a new array containing only the guest details with the specified structure.
+// It filters out any entries that do not match the guest type 'guest'.
 function mutateArray(a) {
-    // mapper to transform the array
-    // to the desired format
-    return a.map(item => ({
+    return a
+    // Only include objects with guest_type 'guest'
+    .filter(item => item.guest_type === guestTypes.GUEST)
+    // Map to the desired structure
+    .map(item => ({
         guest_type: item.guest_type,
         first_name: item.first_name,
         last_name: item.last_name,
