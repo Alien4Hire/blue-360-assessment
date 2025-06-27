@@ -1,5 +1,5 @@
 const buttons = [
-  ['C', '(', ')', '/'],
+  ['C', '+/-', '%', '÷'],
   ['7', '8', '9', 'x'],
   ['4', '5', '6', '-'],
   ['1', '2', '3', '+'],
@@ -8,35 +8,29 @@ const buttons = [
 
 const ButtonGrid = ({ onInput }) => {
   return (
-    <div className="m-1 mb-2">
-      {buttons.map((row, i) => (
-        <div key={i} className="m-2 flex justify-between">
-          {row.map((btn) => (
-            <button
-              key={btn}
-              onClick={() => onInput(btn)}
-              className={`shadow-md rounded-2xl h-12 flex justify-center items-center font-medium
-                ${
-                  btn === 'C'
-                    ? 'bg-yellow-100 text-yellow-600 w-12'
-                    : btn === '='
-                    ? 'bg-green-500 text-white w-12'
-                    : ['/', 'x', '-', '+'].includes(btn)
-                    ? 'bg-yellow-500 text-white w-12 text-xl'
-                    : btn === '0'
-                    ? 'bg-gray-200 text-black flex-1'
-                    : 'bg-gray-200 text-black w-12'
-                }
-              `}
-            >
-              {btn}
-            </button>
-          ))}
-        </div>
-      ))}
-      <div className="flex justify-center mt-5">
-        <div className="w-20 h-1 bg-gray-100 rounded-xl"></div>
-      </div>
+    <div className="grid grid-cols-4 gap-px bg-gray-400">
+      {buttons.flat().map((btn, index) => {
+        const isZero = btn === '0';
+
+        // Determine base button classes
+        const baseClasses = `h-16 md:h-20 text-xl md:text-2xl font-light flex justify-center items-center ${
+          ['÷', 'x', '-', '+', '='].includes(btn)
+            ? 'bg-orange-500 text-white'
+            : btn === 'C' || btn === '+/-' || btn === '%'
+            ? 'bg-gray-400 text-black'
+            : 'bg-gray-200 text-black'
+        }`;
+
+        return (
+          <button
+            key={index}
+            onClick={() => onInput(btn)}
+            className={`${baseClasses} ${isZero ? 'col-span-2' : ''}`}
+          >
+            {btn}
+          </button>
+        );
+      })}
     </div>
   );
 };

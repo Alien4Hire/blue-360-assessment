@@ -1,42 +1,68 @@
 import { useState } from 'react';
 import Display from './Display.js';
-import ButtonGrid from './ButtonGrid';
+import ButtonGrid from './ButtonGrid.js';
 import { evaluate } from 'mathjs';
 
 const Calculator = () => {
-  // State for current expression and result
   const [expression, setExpression] = useState('');
   const [result, setResult] = useState('');
 
-  // Handle button clicks
-  const handleInput = (value) => {
+    const handleInput = (value) => {
     if (value === 'C') {
-      setExpression('');
-      setResult('');
+        setExpression('');
+        setResult('');
     } else if (value === '=') {
-      try {
+        try {
         const sanitized = expression.replace(/x/g, '*');
         const evalResult = evaluate(sanitized);
-        setResult(evalResult.toString());
-      } catch {
+
+        const resultStr = evalResult.toString();
+        const tooBig = Math.abs(evalResult) > 1e308 || resultStr.length > 15;
+
+        if (tooBig || !isFinite(evalResult)) {
+            setResult('Error');
+        } else {
+            setResult(resultStr);
+        }
+        } catch {
         setResult('Error');
-      }
-    } else {
-      setExpression(prev => prev + value);
+        }
     }
-  };
+
+    // Handle percent operation
+    else if (value === '%') {
+        try {
+        const sanitized = expression.replace(/x/g, '*');
+        const evalResult = evaluate(sanitized) / 100;
+        setExpression(evalResult.toString());
+        setResult('');
+        } catch {
+        setResult('Error');
+        }
+    }
+
+    // Handle negation toggle
+    else if (value === '+/-') {
+        try {
+        const sanitized = expression.replace(/x/g, '*');
+        const evalResult = evaluate(sanitized) * -1;
+        setExpression(evalResult.toString());
+        setResult('');
+        } catch {
+        setResult('Error');
+        }
+    }
+
+    // Append values to expression
+    else {
+        setExpression(prev => prev + value);
+    }
+    };
+
 
   return (
     <div className="bg-gray-200 w-screen h-screen flex justify-center items-center">
-      <div className="w-64 bg-white rounded-2xl shadow-xl border-4 border-gray-100">
-        <div className="mx-3 my-2 h-6 flex justify-between text-sm">
-          <div>08:57</div>
-          <div className="flex items-center space-x-1 text-xs">
-            <i className="fas fa-signal"></i>
-            <i className="fas fa-wifi"></i>
-            <i className="fas fa-battery-three-quarters"></i>
-          </div>
-        </div>
+      <div className="w-72 bg-black rounded-2xl shadow-xl overflow-hidden">
         <Display expression={expression} result={result} />
         <ButtonGrid onInput={handleInput} />
       </div>
